@@ -135,7 +135,7 @@ if __name__=='__main__':
     import sys
     g = Xygraph()
     if len(sys.argv) < 2:
-        print "Use: xygraph filename"
+        print("Use: xygraph filename")
     else:
         g.load(sys.argv[1])
         g.saveplot("newplot.eps")

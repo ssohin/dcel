@@ -379,7 +379,7 @@ class PSPlot(PSPrimitive):
         Saves the object as an EPS image
         """
         if self.bounds is None:
-            print "bounding box needed"
+            print("bounding box needed")
         else:
             xmin, xmax, ymin, ymax = 10000, -10000, 10000, -10000
             for p in self.bounds.pl:

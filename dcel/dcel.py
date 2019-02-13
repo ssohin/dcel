@@ -4,14 +4,12 @@
 __all__ = ['Dcel', 'Vertex', 'Hedge', 'Face']
 
 from xygraph import Xygraph
-
 import math as m
 
 class DcelError(Exception): pass
 
 class Vertex:
     """Minimal implementation of a vertex of a 2D dcel"""
-
     def __init__(self, px, py):
         self.x = px
         self.y = py
@@ -23,7 +21,6 @@ class Vertex:
 
 class Hedge:
     """Minimal implementation of a half-edge of a 2D dcel"""
-
     def __init__(self,v1,v2):
         #The origin is defined as the vertex it points to
         self.origin = v2
@@ -37,7 +34,6 @@ class Hedge:
 
 class Face:
     """Implements a face of a 2D dcel"""
-
     def __init__(self):
         self.wedge = None
         self.data = None
@@ -75,7 +71,6 @@ class Face:
 
     def isinside(self, p):
         """Determines whether a point is inside a face"""
-
         h = self.wedge
         inside = False
         if lefton(h, p):
@@ -92,7 +87,6 @@ class Dcel(Xygraph):
     """
     Implements a doubly-connected edge list
     """
-
     def __init__(self, vl=[], el=[], clip=None):
         Xygraph.__init__(self, vl, el)
         self.vertices = []
@@ -108,7 +102,6 @@ class Dcel(Xygraph):
         """
         Creates the dcel from the list of vertices and edges
         """
-
 #Step 1: vertex list creation
         for v in self.vl:
             self.vertices.append(Vertex(v[0], v[1]))
@@ -169,9 +162,7 @@ class Dcel(Xygraph):
         """Given a list of points pl, returns a list of
         with the corresponding face each point belongs to and
         None if it is outside the map.
-
         """
-
         ans = []
         if onetoone:
             fl = self.faces[:]
@@ -226,10 +217,8 @@ class Dcel(Xygraph):
 
 #Misc. functions
 
-
 def hsort(h1, h2):
     """Sorts two half edges counterclockwise"""
-
     if h1.angle < h2.angle:
         return -1
     elif h1.angle > h2.angle:
@@ -240,7 +229,6 @@ def hsort(h1, h2):
 
 def checkhedges(hl):
     """Consistency check of a hedge list: nexthedge, prevhedge"""
-
     for h in hl:
         if h.nexthedge not in hl or h.prevhedge not in hl:
             raise DcelError("Problems with an orphan hedge...")
@@ -249,7 +237,6 @@ def checkhedges(hl):
 def area2(hedge, point):
     """Determines the area of the triangle formed by a hedge and
     an external point"""
-
     pa = hedge.twin.origin
     pb=hedge.origin
     pc=point
@@ -258,7 +245,6 @@ def area2(hedge, point):
 
 def lefton(hedge, point):
     """Determines if a point is to the left of a hedge"""
-
     return area2(hedge, point) >= 0
 
 
@@ -266,7 +252,6 @@ def hangle(dx,dy):
     """Determines the angle with respect to the x axis of a segment
     of coordinates dx and dy
     """
-
     l = m.sqrt(dx*dx + dy*dy)
     if dy > 0:
         return m.acos(dx/l)
@@ -279,6 +264,6 @@ if __name__=='__main__':
     d = Dcel()
     d.load(sys.argv[1])
     for a,p in zip(d.areas(), d.perimeters()):
-        print a,p
+        print(a,p)
 
 
