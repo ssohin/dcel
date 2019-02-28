@@ -1,9 +1,10 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 #Copyright 2008, Angel Yanguas-Gil
 
 #TODO: interface should be a class
 
 """Extracts/saves numerical data from/to files and lines"""
+import sys
 
 _commentchars = ['#']
 _emptycell = 'NaN'
@@ -79,5 +80,3 @@ def transform(col, func):
     """Just another name for map(f,l)"""
 
     return map(func, col)
-
-

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #Copyright 2008, Angel Yanguas-Gil
+#Modified for Sabanto by Sohin Shah
 
 __all__ = ['Dcel', 'Vertex', 'Hedge', 'Face']
 
@@ -16,7 +17,7 @@ class Vertex:
         self.hedgelist = []
 
     def sortincident(self):
-        self.hedgelist.sort(hsort, reverse=True)
+        self.hedgelist.sort(key=cmp_to_key(hsort), reverse=True)
 
 
 class Hedge:
@@ -97,15 +98,14 @@ class Dcel(Xygraph):
                 self.clip(clip)
             self.build_dcel()
 
-
     def build_dcel(self):
         """
         Creates the dcel from the list of vertices and edges
-        """
+        """   
 #Step 1: vertex list creation
         for v in self.vl:
             self.vertices.append(Vertex(v[0], v[1]))
-
+        
 #Step 2: hedge list creation. Assignment of twins and
 #vertices
         for e in self.el:
@@ -123,15 +123,16 @@ class Dcel(Xygraph):
         for v in self.vertices:
             v.sortincident()
             l = len(v.hedgelist)
+            '''
             if l < 2:
                 raise DcelError(
                     "Badly formed dcel: less than two hedges in vertex")
-            else:
-                for i in range(l-1):
-                    v.hedgelist[i].nexthedge = v.hedgelist[i+1].twin
-                    v.hedgelist[i+1].prevhedge = v.hedgelist[i]
-                v.hedgelist[l-1].nexthedge = v.hedgelist[0].twin
-                v.hedgelist[0].prevhedge = v.hedgelist[l-1]
+            else:'''
+            for i in range(l-1):
+                v.hedgelist[i].nexthedge = v.hedgelist[i+1].twin
+                v.hedgelist[i+1].prevhedge = v.hedgelist[i]
+            v.hedgelist[l-1].nexthedge = v.hedgelist[0].twin
+            v.hedgelist[0].prevhedge = v.hedgelist[l-1]
 
         #Step 4: Face assignment
         provlist = self.hedges[:]
@@ -194,12 +195,6 @@ class Dcel(Xygraph):
 
         return ans
 
-    def load(self, filename):
-        """reads a dcel from file using xygraph file format"""
-        a = Xygraph.load(self, filename)
-        self.build_dcel()
-        return a
-
     def areas(self):
         return [f.area() for f in self.faces if not f.external]
 
@@ -258,6 +253,26 @@ def hangle(dx,dy):
     else:
         return 2*m.pi - m.acos(dx/l)
 
+def cmp_to_key(mycmp):
+    'Convert a cmp= function into a key= function'
+    class K(object):
+        def __init__(self, obj, *args):
+            self.obj = obj
+        def __lt__(self, other):
+            return mycmp(self.obj, other.obj) < 0
+        def __gt__(self, other):
+            return mycmp(self.obj, other.obj) > 0
+        def __eq__(self, other):
+            return mycmp(self.obj, other.obj) == 0
+        def __le__(self, other):
+            return mycmp(self.obj, other.obj) <= 0
+        def __ge__(self, other):
+            return mycmp(self.obj, other.obj) >= 0
+        def __ne__(self, other):
+            return mycmp(self.obj, other.obj) != 0
+    return K
+
+'''
 
 if __name__=='__main__':
     import sys
@@ -266,4 +281,10 @@ if __name__=='__main__':
     for a,p in zip(d.areas(), d.perimeters()):
         print(a,p)
 
+    def load(self, filename):
+        """reads a dcel from file using xygraph file format"""
+        a = Xygraph.load(self, filename)
+        self.build_dcel()
+        return a
 
+'''

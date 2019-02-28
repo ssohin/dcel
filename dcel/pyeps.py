@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 #Copyright 2008, Angel Yanguas-Gil
 
 """Crude ps and eps drawing of geometrical objects.
@@ -10,7 +10,7 @@ methods needed for saving the plots as ps and eps files.
 Methods expects points passed as (x, y) pairs.
 
 """
-
+import sys
 
 class PSPrimitive:
     """
@@ -159,7 +159,7 @@ class PSPolyline(PSPrimitive):
         self.lc.append(self.setlinewidth(self.linewidth))
         self.lc.append(self.setgray(self.linecolor))
         if self.style is not 'full':
-            self.lc.append(self.setdash(style))
+            self.lc.append(self.setdash(self.style))
         self.lc.append(self.stroke())
 
     def isplot(self):
@@ -208,7 +208,7 @@ class PSCircle(PSPrimitive):
         self.lc.append(self.setlinewidth(self.linewidth))
         self.lc.append(self.setgray(self.linecolor))
         if self.style is not 'full':
-            self.lc.append(self.setdash(style))
+            self.lc.append(self.setdash(self.style))
         self.lc.append(self.stroke())
         if self.bgcolor is not 1:
             self.lc.append(self.grestore())
@@ -263,7 +263,7 @@ class PSPolygon(PSPrimitive):
         self.lc.append(self.setlinewidth(self.linewidth))
         self.lc.append(self.setgray(self.linecolor))
         if self.style is not 'full':
-            self.lc.append(self.setdash(style))
+            self.lc.append(self.setdash(self.style))
         self.lc.append(self.stroke())
         if self.bgcolor is not 1:
             self.lc.append(self.grestore())
@@ -397,5 +397,3 @@ class PSPlot(PSPrimitive):
             f = open(filename, 'w')
             f.write('\n'.join(epsfile) + '\n')
             f.close()
-
-
